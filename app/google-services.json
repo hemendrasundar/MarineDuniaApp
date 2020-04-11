@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "381755762793",
+    "firebase_url": "https://marinedunia.firebaseio.com",
+    "project_id": "marinedunia",
+    "storage_bucket": "marinedunia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381755762793:android:117cd5bd011648117b9af8",
+        "android_client_info": {
+          "package_name": "com.sun.marinedunia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381755762793-p04dr9c4sarl9p4h8at89vk563v33t6e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sun.marinedunia",
+            "certificate_hash": "fc8df1467f2b9339a4d2b92376a7c813ff221a7c"
+          }
+        },
+        {
+          "client_id": "381755762793-8jcn0ip8k0ju74kri6hbhlbua55ofnnb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpqBDC85_EmFylyI8ZtAp-H2WupfKi48c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381755762793-8jcn0ip8k0ju74kri6hbhlbua55ofnnb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
