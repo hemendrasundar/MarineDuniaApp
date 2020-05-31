@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="11dp"
+    android:layout_marginRight="11dp"
+
+    android:elevation="5dp"
+    card_view:cardCornerRadius="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/news_img"
+            android:transitionName="img"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/shadow_bottom"
+            android:src="@drawable/bottom_shadow"
+            android:layout_alignBottom="@id/news_img"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"/>
+        <ProgressBar
+            android:id="@+id/progress_load_photo"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_marginTop="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextTitle"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="Title"
+            android:textSize="17sp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/news_img"
+            android:id="@+id/News_Title"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
+
+
+
+</FrameLayout>

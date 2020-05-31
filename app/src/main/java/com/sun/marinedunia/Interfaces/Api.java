@@ -3,6 +3,7 @@ package com.sun.marinedunia.Interfaces;
 
 import com.sun.marinedunia.Models.BookCategories;
 import com.sun.marinedunia.Models.EBooks;
+import com.sun.marinedunia.Models.News;
 
 
 import retrofit2.Call;
@@ -20,6 +21,7 @@ public interface Api {
     @GET("macros/s/AKfycbwSoMUeGG82szbnzqWoIiRL1gkYFOn6sMDi7yNbUuTXqXfdFtrW/exec?action=getBookCategory")
     Call<BookCategories> getBookCategory();
 
-
+    @GET("macros/s/AKfycbwSoMUeGG82szbnzqWoIiRL1gkYFOn6sMDi7yNbUuTXqXfdFtrW/exec?action=getNews")
+    Call<News> getNews();
 
 }

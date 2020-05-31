@@ -1,7 +1,10 @@
 package com.sun.marinedunia.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,11 +18,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.sun.marinedunia.R;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -29,7 +35,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     private TextView[] dots;
     private Handler handler;
     private int delay = 5000; //milliseconds
-
+    FirebaseAuth auth;
     private int page = 0;
     private MyViewPagerAdapter myAdapter;
     Runnable runnable = new Runnable() {
@@ -49,6 +55,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         // Checking for first time launch - before calling setContentView()
 
 
@@ -63,7 +70,11 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         setContentView(R.layout.activity_welcome);
-
+        auth = FirebaseAuth.getInstance();
+        if(auth.getCurrentUser()!=null){
+            startActivity(new Intent(getApplicationContext(), QuizStartActivity.class));
+            finish();
+        }
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         handler = new Handler();
@@ -95,10 +106,13 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void launchHomeScreen() {
+    private void launchLoginScreen() {
+        if(!isConnected()) buildDialog(WelcomeActivity.this).show();
+        else {
 
-        startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-        finish();
+            startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+            finish();
+        }
     }
 
     private void addBottomDots() {
@@ -158,8 +172,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
-startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-break;
+             launchLoginScreen();
+                break;
             case R.id.btn_join:
                 startActivity(new Intent(WelcomeActivity.this,SignUpActivity.class));
                 break;
@@ -216,5 +230,39 @@ break;
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(runnable);
+    }
+
+    boolean isConnected () {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netinfo = cm.getActiveNetworkInfo();
+
+        if (netinfo != null && netinfo.isConnectedOrConnecting()) {
+            android.net.NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            android.net.NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+            if ((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting())) {
+                return true;
+            } else return false;
+        } else
+            return false;
+    }
+
+
+    public AlertDialog.Builder buildDialog(Context c) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("No Internet Connection");
+        builder.setMessage("You need to have Mobile Data or wifi to access this.");
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+            }
+        });
+
+        return builder;
     }
 }

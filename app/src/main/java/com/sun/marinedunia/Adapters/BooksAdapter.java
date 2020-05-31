@@ -31,6 +31,13 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.sun.marinedunia.Activities.QuizQuestionsActivity;
+import com.sun.marinedunia.Activities.ScoreActivity;
 import com.sun.marinedunia.BuildConfig;
 import com.sun.marinedunia.R;
 import com.sun.marinedunia.Models.Ebook;
@@ -50,7 +57,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.viewholder> {
     private List<Ebook> categoryModelList;
-    private Context context;
+     Context context;
     private ProgressDialog progressDialog;
     int DOWNLOAD_NOTIFICATION_ID = 232;
     boolean isDownloading = false;
@@ -69,7 +76,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.viewholder> 
 
     @Override
     public void onBindViewHolder(@NonNull viewholder viewholder, int position) {
-        viewholder.setData(categoryModelList.get(position).getThumbnail(), categoryModelList.get(position).getItemName(), categoryModelList.get(position).getBrand(), position);
+        viewholder.setData(categoryModelList.get(position).getThumbnail(), categoryModelList.get(position).getItemName(), categoryModelList.get(position).getBrand(), position,context);
     }
 
     @Override
@@ -83,17 +90,27 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.viewholder> 
         private CircleImageView imageView;
         private TextView title;
         private ImageView download_iv;
-
+        final InterstitialAd mInterstitialAd;
         public viewholder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.books_circle_iv);
             title = itemView.findViewById(R.id.books_title_tv);
             download_iv = itemView.findViewById(R.id.download_icn);
+             mInterstitialAd = new InterstitialAd(context);
+            mInterstitialAd.setAdUnitId(context.getResources().getString(R.string.interstitialAd));
+
         }
 
-        private void setData(final String url, final String title, final String fileUrl, final int position) {
-            Glide.with(itemView.getContext()).load(url).into(imageView);
+        private void setData(final String url, final String title, final String fileUrl, final int position,Context context) {
+            Glide.with(itemView.getContext()).load(url).placeholder(R.drawable.ic_picture_as_pdf_black_24dp).into(imageView);
             this.title.setText(title);
+            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    startDownload(fileUrl,position,title);
+                }
+            });
             File pdfFile = new File(Environment.getExternalStorageDirectory() + "/MarineDunia/" + categoryModelList.get(position).getItemName());
             if (pdfFile.exists()) {
                 this.download_iv.setImageResource(R.drawable.ic_eye);
@@ -107,12 +124,20 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.viewholder> 
                 @Override
                 public void onClick(View v) {
                     if (download_iv.getTag().toString().equals("download")) {
-                        startDownload(fileUrl,position,title);
+
+                        if(mInterstitialAd.isLoaded()){
+                            mInterstitialAd.show();
+                        }else{
+                            startDownload(fileUrl,position,title);
+                        }
+
+
                     }
                     if(download_iv.getTag().toString().equals("view"))
                     {
                         OpenPDF(position,title);
-                      //  Toast.makeText(context, "pdf viewer will open", Toast.LENGTH_SHORT).show();
+
+
                     }
                     //Download Functonality
                 }
@@ -152,7 +177,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.viewholder> 
                     File file = new File(uri.getPath());
                     if (file.exists()) {
                         //File file1 = new File(getActivity().getFilesDir() + File.separator + "PDF" + File.separator + "eFSIS" + File.separator + "InspectionOrder.pdf");
-                        Toast.makeText(context, file.toString(), Toast.LENGTH_SHORT).show();
+
                         uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
                         intent.setDataAndType(uri, "application/pdf");
                         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -216,7 +241,7 @@ private class DownloadFile extends AsyncTask<String, Void, Void> {
             if(pdfFile!= null) {
 
                 progressDialog.dismiss();
-                Toast.makeText(context, "Downloade  d Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Downloaded Successfully", Toast.LENGTH_SHORT).show();
             }
 
             else {

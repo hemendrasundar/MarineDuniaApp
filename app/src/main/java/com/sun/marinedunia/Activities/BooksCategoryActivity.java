@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.sun.marinedunia.Adapters.BooksCategoryAdapter;
 import com.sun.marinedunia.Interfaces.Api;
 import com.sun.marinedunia.R;
@@ -20,6 +21,7 @@ import com.sun.marinedunia.Models.BookCategories;
 import com.sun.marinedunia.Models.BookCategory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,12 +29,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.sun.marinedunia.Models.BookCategory.CategorynameComparator;
+
 public class BooksCategoryActivity extends AppCompatActivity {
 
 
     private RecyclerView rv_bookCategories;
     private Dialog loadingdialog;
-
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,15 +80,13 @@ public class BooksCategoryActivity extends AppCompatActivity {
                 for (int i = 0; i < heroList.getItems().size(); i++) {
                     itemlist.add(heroList.getItems().get(i));
                 }
-
+                     Collections.sort(itemlist,CategorynameComparator);
                 final BooksCategoryAdapter adapter = new BooksCategoryAdapter(itemlist);
                 rv_bookCategories.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 loadingdialog.dismiss();
                 //displaying the string array into listview
 
-                //now we can do whatever we want with this list
-                Toast.makeText(getApplicationContext(), response.body().getItems().get(0).getCatName().toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -109,5 +111,8 @@ public class BooksCategoryActivity extends AppCompatActivity {
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitialAd));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 }

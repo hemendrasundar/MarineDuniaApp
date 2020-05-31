@@ -6,6 +6,9 @@
     <color name="dot_inactive">#4c4c4c</color>
     <color name="dot_active">#e5e5e5</color>
     <color name="intro_heading">#DA4E56</color>
-    <color name="intro_text">#442062</color>>
+    <color name="intro_text">#442062</color>
+    <color name="colorBackground">#f9f9fa</color>
+    <color name="colorTextSubtitle">#4e4e4e</color>
+    <color name="colorTextTitle">#262626</color>
 
 </resources>

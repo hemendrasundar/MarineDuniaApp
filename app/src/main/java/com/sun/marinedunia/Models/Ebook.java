@@ -4,6 +4,8 @@ package com.sun.marinedunia.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Comparator;
+
 
 public class Ebook {
 
@@ -49,5 +51,16 @@ public class Ebook {
     public void setThumbnail(String thumbnail) {
         Thumbnail = thumbnail;
     }
+
+    public static Comparator<Ebook> ebookComparator = new Comparator<Ebook>() {
+
+        public int compare(Ebook Book1, Ebook Book2) {
+            String Category1 = Book1.getItemName().toUpperCase();
+            String Category2 = Book2.getItemName().toUpperCase();
+
+            //ascending order
+            return Category1.compareTo(Category2);
+
+        }};
 
 }
